@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchBar from "../SearchBar/SearchBar";
 import { fetchMovies } from "../../services/movieService";
 import { Toaster, toast } from "react-hot-toast";
@@ -26,11 +26,13 @@ export default function App() {
   const movies = data?.results ?? [];
   const totalPages = data?.total_pages ?? 0;
 
-  const onSubmit = (newQuery: string) => {
-    if (newQuery.trim().length === 0) {
+  useEffect(() => {
+    if (!isLoading && data && movies.length === 0) {
       toast.error("No movies found for your request.");
-      return;
     }
+  }, [isLoading, data, movies.length]);
+
+  const onSubmit = (newQuery: string) => {
     setQuery(newQuery);
     setPage(1);
   };
